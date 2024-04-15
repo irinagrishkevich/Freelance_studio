@@ -52,7 +52,7 @@ export class Router{
 
     async activateRoute(){
         const urlRoute = window.location.pathname
-        const newRoute = this.route.find(item => item.route === urlRoute)
+        const newRoute = this.routes.find(item => item.route === urlRoute)
 
         if(newRoute){
             if (newRoute.title){
