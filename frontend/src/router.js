@@ -1,21 +1,44 @@
+import {Dashboard} from "./components/dashboard";
+import {SignUp} from "./components/sign-up";
+import {Login} from "./components/login";
+
 export class Router{
     constructor(){
+        this.titlePageElement = document.getElementById('title')
+        this.contentPageElement = document.getElementById('content')
+
         this.initEvents()
         this.routes = [
             {
                 route: '/',
-
+                title: 'Дашборд',
+                filePathTemplate: '/templates/dashboard.html',
+                load: () => {
+                    new Dashboard()
+                }
             },
             {
                 route: '/404',
+                title: 'Страница не найдена',
+                filePathTemplate: '/templates/404.html'
 
             },
             {
                 route: '/login',
+                title: 'Авторизация',
+                filePathTemplate: '/templates/login.html',
+                load: () => {
+                    new Login()
+                }
 
             },
             {
-                route: '/signup',
+                route: '/sign-up',
+                title: 'Регистрация',
+                filePathTemplate: '/templates/sign-up.html',
+                load: () => {
+                    new SignUp()
+                }
 
             },
 
@@ -27,7 +50,24 @@ export class Router{
         window.addEventListener('popstate', this.activateRoute.bind(this));
     }
 
-    activateRoute(){
+    async activateRoute(){
+        const urlRoute = window.location.pathname
+        const newRoute = this.route.find(item => item.route === urlRoute)
 
+        if(newRoute){
+            if (newRoute.title){
+                this.titlePageElement.innerText = newRoute.title + ' | Freelance Studio'
+            }
+            if (newRoute.filePathTemplate){
+                this.contentPageElement.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text())
+            }
+
+            if (newRoute.load && typeof  newRoute.load === 'function'){
+                newRoute.load()
+            }
+        } else {
+            console.log('No route found')
+            window.location = '/404'
+        }
     }
 }
