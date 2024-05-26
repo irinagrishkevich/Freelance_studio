@@ -29,6 +29,8 @@
    6.2 Тестирование
 
 
-
+1. npm run dev - запуск проекта в режиме разработки
+2. npm run build - сборка проекта
+3. Редирект делаем не через window.location, а через history.pushState
 
 

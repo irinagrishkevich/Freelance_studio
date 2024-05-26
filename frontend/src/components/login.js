@@ -2,6 +2,10 @@ export class Login {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
 
+        if (localStorage.getItem('accessToken')) {
+            return this.openNewRoute('/')
+        }
+
         this.emailElement = document.getElementById('email')
         this.passwordElement = document.getElementById('password')
         this.rememberMeElement = document.getElementById('remember-me')
@@ -56,7 +60,7 @@ export class Login {
 
             this.openNewRoute('/')
 
-        }  
+        }
     }
 }
 
