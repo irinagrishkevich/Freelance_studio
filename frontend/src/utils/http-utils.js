@@ -1,18 +1,28 @@
 import config from "../config/config";
+import {AuthUtils} from "./auth-utils";
 
 export class HttpUtils{
-    static async request(url, method = 'GET', body = null) {
+    static async request(url, method = 'GET', useAuth = true, body = null) {
         const result = {
             error: false,
             response: null
         }
 
+
         const params = {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+
             },
+        }
+        let token = null
+        if (useAuth){
+            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)
+            if (token){
+                params.headers['authorization'] = token
+            }
         }
         if (body){
             params.body = JSON.stringify(body)
@@ -28,7 +38,27 @@ export class HttpUtils{
 
         if (response.status < 200 || response.status >= 300) {
             result.error = true
-            return result
+            if (useAuth && response.status === 401){
+
+                if (!token){
+                    // 1 токена нет
+                    result.redirect = '/login'
+                } else {
+                    // 2 токена устарел/невалидный (надо обновить)
+                    const updatedTokenResult = await AuthUtils.updateRefreshToken()
+
+                    if (updatedTokenResult){
+                        // запрос повторно
+                        return this.request(url, method, useAuth, body)
+                    }else {
+                        result.redirect = '/login'
+                    }
+
+
+                }
+
+
+            }
         }
         return result
     }
