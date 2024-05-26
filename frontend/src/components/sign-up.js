@@ -1,8 +1,10 @@
+import {AuthUtils} from "../utils/auth-utils";
+
 export class SignUp{
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
 
-        if (localStorage.getItem('accessToken')) {
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         this.nameElement = document.getElementById('name')
@@ -87,10 +89,8 @@ export class SignUp{
                 this.commonErrorElement.style.display = 'block'
                 return
             }
+            AuthUtils.setAuthInfo(result.accessToken, result.refreshToken, {id: result.id, name: result.name})
 
-            localStorage.setItem('accessToken', result.accessToken)
-            localStorage.setItem('refreshToken', result.refreshToken)
-            localStorage.setItem('userInfo', JSON.stringify({id: result.id, name: result.name}))
 
 
             this.openNewRoute('/')
