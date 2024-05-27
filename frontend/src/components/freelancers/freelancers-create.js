@@ -1,10 +1,12 @@
 import {HttpUtils} from "../../utils/http-utils";
+import {FileUtils} from "../../utils/file-utils";
 
 export class FreelancersCreate {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
 
         document.getElementById('saveButton').addEventListener('click', this.saveFreelancer.bind(this))
+            bsCustomFileInput.init();
 
         this.nameInputElement = document.getElementById('nameInput')
         this.lastNameInputElement = document.getElementById('lastNameInput')
@@ -47,7 +49,7 @@ export class FreelancersCreate {
         e.preventDefault()
 
         if (this.validateForm()) {
-            const result = await HttpUtils.request('/freelancers', 'POST', true, {
+            const createData = {
                 name: this.nameInputElement.value,
                 lastName: this.lastNameInputElement.value,
                 email: this.emailInputElement.value,
@@ -56,8 +58,13 @@ export class FreelancersCreate {
                 location: this.locationInputElement.value,
                 skills: this.skillsInputElement.value,
                 info: this.infoInputElement.value,
-                // avatarBase64: this.avatarInputElement.files[0]
-            })
+            }
+            if (this.avatarInputElement.files && this.avatarInputElement.files.length > 0) {
+                createData.avatarBase64 = await FileUtils.convertFileToBase64(this.avatarInputElement.files[0])
+            }
+
+
+            const result = await HttpUtils.request('/freelancers', 'POST', true, createData)
 
             if (result.redirect) {
                 return this.openNewRoute(result.redirect)

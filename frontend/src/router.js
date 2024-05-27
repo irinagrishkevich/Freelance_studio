@@ -97,7 +97,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new FreelancersCreate(this.openNewRoute.bind(this))
-                }
+                },
+                scripts:['bs-custom-file-input.min.js']
+
             }
 
 
@@ -122,7 +124,6 @@ export class Router {
             element = e.target.parentNode
         }
         if (element) {
-            console.log(element.href)
             e.preventDefault()
             const currentRoute = window.location.pathname
             const url = element.href.replace(window.location.origin, '')
