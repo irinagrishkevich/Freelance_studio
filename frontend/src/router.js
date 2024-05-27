@@ -3,6 +3,7 @@ import {SignUp} from "./components/auth/sign-up";
 import {Login} from "./components/auth/login";
 import {Logout} from "./components/auth/logout";
 import {FreelancersList} from "./components/freelancers/freelancers-list";
+import {FileUtils} from "./utils/file-utils";
 
 export class Router {
     constructor() {
@@ -74,7 +75,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new FreelancersList(this.openNewRoute.bind(this))
-                }
+                },
+                styles: ['dataTables.bootstrap4.min.css'],
+                scripts:['jquery.dataTables.min.js','dataTables.bootstrap4.min.js' ]
             }
 
 
@@ -99,9 +102,12 @@ export class Router {
             element = e.target.parentNode
         }
         if (element) {
+            console.log(element.href)
             e.preventDefault()
+            const currentRoute = window.location.pathname
             const url = element.href.replace(window.location.origin, '')
-            if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
+
+            if (!url || (currentRoute === url.replace('#', '') )|| url === '/#' || url.startsWith('javascript:void(0)')) {
                 return
             }
 
@@ -118,10 +124,14 @@ export class Router {
                     document.querySelector(`link[href='/css/${style}']`).remove()
                 })
             }
+            if(currentRoute.scripts && currentRoute.scripts.length > 0) {
+                currentRoute.scripts.forEach(script => {
+                    document.querySelector(`script[src='/js/${script}']`).remove()
+                })
+            }
             if (currentRoute.unload && typeof currentRoute.unload === 'function') {
                 currentRoute.unload()
             }
-            console.log(currentRoute)
 
         }
 
@@ -131,11 +141,13 @@ export class Router {
         if (newRoute) {
             if(newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
-                    const link = document.createElement('link')
-                    link.rel = 'stylesheet'
-                    link.href = `/css/` + style
-                    document.head.insertBefore(link, this.adminLteStyleElement)
+                    FileUtils.loadPageStyle('/css/' + style, this.adminLteStyleElement)
                 })
+            }
+            if(newRoute.scripts && newRoute.scripts.length > 0) {
+                for (const script of newRoute.scripts) {
+                    await FileUtils.loadPageScript('/js/' + script)
+                }
             }
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title + ' | Freelance Studio'
