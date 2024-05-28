@@ -6,3 +6,17 @@
     gap: 5px;
   }
 }
+
+.order-create{
+  .bootstrap-datetimepicker-widget .picker-switch a{
+      color: white;
+    }
+  .bootstrap-datetimepicker-widget .picker-switch span:hover{
+
+      background-color: rgba(233, 236, 239, 0.3);
+    }
+  .bootstrap-datetimepicker-widget .collapse span:hover{
+
+      background-color: rgba(233, 236, 239, 0.3);
+    }
+}
