@@ -19,4 +19,29 @@ export class CommonUtils {
 
         return levelHtml
     }
+
+    static getStatusInfo(status){
+        let statusHtml = null
+        if (config.orderStatuses.canceled){
+
+        }
+        switch (status) {
+            case config.orderStatuses.new:
+                statusHtml = '<span class="badge badge-secondary">Новый</span>'
+                break
+            case config.orderStatuses.confirmed:
+                statusHtml = '<span class="badge badge-info">Подтвержден</span>'
+                break
+            case config.orderStatuses.success:
+                statusHtml = '<span class="badge badge-success">Выполнен</span>'
+                break
+            case config.orderStatuses.canceled:
+                statusHtml = '<span class="badge badge-danger">Отменен</span>'
+                break
+            default:
+                statusHtml = '<span class="badge badge-secondary">Неизвестно</span>'
+        }
+
+        return statusHtml
+    }
 }
