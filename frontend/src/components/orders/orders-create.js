@@ -138,7 +138,7 @@ export class OrdersCreate {
             if(this.completeDate){
                 createData.completeDate = this.completeDate.toISOString()
             }
-            
+
             const result = await HttpUtils.request('/orders', 'POST', true, createData)
 
             if (result.redirect) {
