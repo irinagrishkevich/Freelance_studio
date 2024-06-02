@@ -14,6 +14,7 @@ import {OrdersCreate} from "./components/orders/orders-create";
 import {OrdersEdit} from "./components/orders/orders-edit";
 import {OrdersDelete} from "./components/orders/order-delete";
 
+
 export class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title')
@@ -28,8 +29,17 @@ export class Router {
                 filePathTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    new Dashboard()
-                }
+                    new Dashboard(this.openNewRoute.bind(this))
+                },
+                scripts: [
+                    'moment.min.js',
+                    'moment-ru-locale.js',
+                    'fullcalendar.js',
+                    'fullcalendar-locale-ru.js'
+                ],
+                styles: [
+                    'fullcalendar.css',
+                ]
             },
             {
                 route: '/404',
@@ -197,6 +207,8 @@ export class Router {
         }else if(e.target.parentNode.nodeName === 'A') {
             element = e.target.parentNode
         }
+
+
         if (element) {
             e.preventDefault()
             const currentRoute = window.location.pathname
@@ -254,6 +266,7 @@ export class Router {
                     contentBlock = document.getElementById('content-layout')
                     document.body.classList.add('sidebar-mini')
                     document.body.classList.add('layout-fixed')
+                    this.activateMenuItem(newRoute)
                 } else {
                     document.body.classList.remove('sidebar-mini')
                     document.body.classList.remove('layout-fixed')
@@ -270,4 +283,24 @@ export class Router {
             await this.activateRoute()
         }
     }
+
+    activateMenuItem(route){
+        document.querySelectorAll('.sidebar .nav-link').forEach(item => {
+            const href = item.getAttribute('href')
+            if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
+                item.classList.add('active')
+            }else {
+                item.classList.remove('active')
+            }
+
+        })
+    }
 }
+
+
+
+
+
+
+
+
