@@ -27,6 +27,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "admin-lte": "3.2"
+    "admin-lte": "3.2",
+    "dotenv": "^16.4.5"
   }
 }

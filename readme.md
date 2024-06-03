@@ -39,3 +39,9 @@
 5. brew services start mongodb-community@7.0 в терминале перед миграцией
 6. brew services stop mongodb-community@7.0 
 7. port: 9001 если занят 9001, то 9002 и т.д.
+
+
+1. npm run build - сборка проекта( в папке frontend)
+2. npm start - запуск проекта в режиме разработки( в папке backend)
+3. npm run http-server - запуск сервера для просмотра проекта( в папке frontend из папки dist)
+   3.1 npm run live-server - запуск сервера для просмотра проекта( в папке frontend из папки dist)
